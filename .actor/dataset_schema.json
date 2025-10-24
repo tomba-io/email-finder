@@ -1,0 +1,261 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "type": "object",
+        "properties": {
+            "email": {
+                "type": "string",
+                "description": "Author's email address"
+            },
+            "first_name": {
+                "type": ["string", "null"],
+                "description": "Author's first name"
+            },
+            "last_name": {
+                "type": ["string", "null"],
+                "description": "Author's last name"
+            },
+            "full_name": {
+                "type": ["string", "null"],
+                "description": "Author's full name"
+            },
+            "website_url": {
+                "type": ["string", "null"],
+                "description": "Website URL associated with the author"
+            },
+            "company": {
+                "type": ["string", "null"],
+                "description": "Author's company or organization"
+            },
+            "position": {
+                "type": ["string", "null"],
+                "description": "Author's job title or position"
+            },
+            "country": {
+                "type": ["string", "null"],
+                "description": "Author's country"
+            },
+            "gender": {
+                "type": ["string", "null"],
+                "description": "Author's gender"
+            },
+            "twitter": {
+                "type": ["string", "null"],
+                "description": "Author's Twitter profile URL"
+            },
+            "linkedin": {
+                "type": ["string", "null"],
+                "description": "Author's LinkedIn profile URL"
+            },
+            "score": {
+                "type": ["number", "null"],
+                "description": "Confidence score for the author information (0-100)"
+            },
+            "accept_all": {
+                "type": ["boolean", "null"],
+                "description": "Whether the domain accepts all emails"
+            },
+            "phone_number": {
+                "type": ["boolean", "null"],
+                "description": "Whether a phone number is available for this author"
+            },
+            "info": {
+                "type": ["object", "null"],
+                "description": "Additional detailed information about the author and source",
+                "properties": {
+                    "title": {
+                        "type": ["string", "null"],
+                        "description": "Page title where the author was found"
+                    },
+                    "description": {
+                        "type": ["string", "null"],
+                        "description": "Page description or meta description"
+                    },
+                    "first_name": {
+                        "type": ["string", "null"],
+                        "description": "First name from page metadata"
+                    },
+                    "last_name": {
+                        "type": ["string", "null"],
+                        "description": "Last name from page metadata"
+                    },
+                    "full_name": {
+                        "type": ["string", "null"],
+                        "description": "Full name from page metadata"
+                    },
+                    "article_domain": {
+                        "type": ["string", "null"],
+                        "description": "Domain of the article or page"
+                    },
+                    "same_as_domain": {
+                        "type": ["string", "null"],
+                        "description": "Whether the domain matches expected domain"
+                    },
+                    "linkedin": {
+                        "type": ["string", "null"],
+                        "description": "LinkedIn handle from page metadata"
+                    },
+                    "twitter": {
+                        "type": ["string", "null"],
+                        "description": "Twitter handle from page metadata"
+                    },
+                    "phone": {
+                        "type": ["string", "null"],
+                        "description": "Phone number from page metadata"
+                    },
+                    "email": {
+                        "type": ["string", "null"],
+                        "description": "Email from page metadata"
+                    },
+                    "gender": {
+                        "type": ["string", "null"],
+                        "description": "Gender from page metadata"
+                    },
+                    "position": {
+                        "type": ["string", "null"],
+                        "description": "Position from page metadata"
+                    },
+                    "image": {
+                        "type": ["string", "null"],
+                        "description": "Author image URL from page metadata"
+                    },
+                    "gravatar": {
+                        "type": ["boolean", "null"],
+                        "description": "Whether author has a Gravatar"
+                    },
+                    "emails": {
+                        "type": ["array", "null"],
+                        "description": "Array of additional emails found",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "verification": {
+                "type": ["object", "null"],
+                "description": "Email verification information from Tomba",
+                "properties": {
+                    "date": {
+                        "type": ["string", "null"],
+                        "description": "Date when the email was verified (ISO format)"
+                    },
+                    "status": {
+                        "type": ["string", "null"],
+                        "description": "Verification status (valid, invalid, unknown)"
+                    }
+                }
+            },
+            "sources": {
+                "type": ["array", "null"],
+                "description": "Sources where the author information was found",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "uri": {
+                            "type": ["string", "null"],
+                            "description": "URI where the email was found"
+                        },
+                        "website_url": {
+                            "type": ["string", "null"],
+                            "description": "Website URL where the email was found"
+                        },
+                        "extracted_on": {
+                            "type": ["string", "null"],
+                            "description": "Date when the email was extracted (ISO format)"
+                        },
+                        "last_seen_on": {
+                            "type": ["string", "null"],
+                            "description": "Date when the email was last seen (ISO format)"
+                        },
+                        "still_on_page": {
+                            "type": ["boolean", "null"],
+                            "description": "Whether the email is still on the page"
+                        }
+                    }
+                }
+            }
+        },
+        "required": ["email"]
+    },
+    "views": {
+        "overview": {
+            "title": "Overview",
+            "transformation": {
+                "fields": ["email", "full_name", "position", "company", "website_url", "verification.status", "score"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "email": {
+                        "label": "Email"
+                    },
+                    "full_name": {
+                        "label": "Full Name"
+                    },
+                    "position": {
+                        "label": "Position"
+                    },
+                    "company": {
+                        "label": "Company"
+                    },
+                    "website_url": {
+                        "label": "Website"
+                    },
+                    "verification.status": {
+                        "label": "Email Status"
+                    },
+                    "score": {
+                        "label": "Confidence Score"
+                    }
+                }
+            }
+        },
+        "detailed": {
+            "title": "Detailed View",
+            "transformation": {
+                "fields": [
+                    "email",
+                    "first_name",
+                    "last_name",
+                    "full_name",
+                    "position",
+                    "company",
+                    "website_url",
+                    "country",
+                    "gender",
+                    "twitter",
+                    "linkedin",
+                    "score",
+                    "accept_all",
+                    "phone_number",
+                    "verification",
+                    "sources"
+                ]
+            },
+            "display": {
+                "component": "table"
+            }
+        },
+        "sources": {
+            "title": "Source Analysis",
+            "transformation": {
+                "fields": ["email", "full_name", "sources"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "email": {
+                        "label": "Email"
+                    },
+                    "full_name": {
+                        "label": "Author"
+                    },
+                    "sources": {
+                        "label": "Sources Found"
+                    }
+                }
+            }
+        }
+    }
+}
