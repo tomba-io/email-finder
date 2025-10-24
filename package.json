@@ -1,6 +1,6 @@
 {
     "name": "email-finder",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "type": "module",
     "description": "Tomba Email Finder Actor for discovering email addresses by combining domain + first name + last name",
     "engines": {
