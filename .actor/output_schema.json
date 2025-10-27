@@ -1,0 +1,14 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Email Finder Output",
+    "description": "Output from Tomba Email Finder Actor - discovered email addresses with contact information",
+    "type": "object",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "Email Discovery Results",
+            "description": "Found email addresses with contact details and verification status",
+            "template": "{{links.apiDefaultDatasetUrl}}/items"
+        }
+    }
+}
