@@ -191,7 +191,7 @@ The Actor gracefully handles various scenarios:
 
 ## Keywords
 
-email finder, email discovery, contact finder, lead generation, email search, prospect research, email hunting, contact discovery, Tomba API, Apify actor, sales prospecting, outreach automation, business contacts, email validation
+email finder, email discovery, contact finder, lead generation, email search, prospect research, email hunting, contact discovery, sales prospecting, outreach automation, business contacts, email validation
 
 ## Support
 
