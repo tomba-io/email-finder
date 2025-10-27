@@ -9,7 +9,8 @@
             "description": "Your Tomba API key (starts with 'ta_'). Get it from https://app.tomba.io/api",
             "editor": "textfield",
             "isSecret": true,
-            "example": "ta_xxxxxxxxxxxxxxxxxxxx"
+            "example": "ta_xxxxxxxxxxxxxxxxxxxx",
+            "prefill": "ta_xxxxxxxxxxxxxxxxxxxx"
         },
         "tombaApiSecret": {
             "title": "Tomba API Secret",
@@ -17,7 +18,8 @@
             "description": "Your Tomba API secret (starts with 'ts_'). Get it from https://app.tomba.io/api",
             "editor": "textfield",
             "isSecret": true,
-            "example": "ts_xxxxxxxxxxxxxxxxxxxx"
+            "example": "ts_xxxxxxxxxxxxxxxxxxxx",
+            "prefill": "ts_xxxxxxxxxxxxxxxxxxxx"
         },
         "requests": {
             "title": "Email Finder Requests",
@@ -58,6 +60,13 @@
                     "domain": "example.com",
                     "firstName": "Jane",
                     "lastName": "Smith"
+                }
+            ],
+            "prefill": [
+                {
+                    "domain": "stripe.com",
+                    "firstName": "John",
+                    "lastName": "Doe"
                 }
             ]
         },
