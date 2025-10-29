@@ -189,6 +189,72 @@ The Actor gracefully handles various scenarios:
 - Monitor your Tomba usage dashboard
 - Consider Tomba's pricing tiers for volume usage
 
+## FAQ
+
+### General Questions
+
+**Q: How does email finding work?**
+A: Email finding uses a person's name and company domain to predict and verify their email address. It combines pattern recognition, database matching, and verification to find valid email addresses.
+
+**Q: What information do I need to find an email?**
+A: You need the person's first name, last name, and company domain. The more accurate these details, the better the results.
+
+**Q: How accurate are the found emails?**
+A: Accuracy varies by company and person, but Tomba typically achieves 85-95% accuracy. The confidence score (0-100) indicates the reliability of each found email.
+
+### Usage & Features
+
+**Q: Can I process multiple email searches at once?**
+A: Yes, provide an array of requests in the `requests` parameter. You can process up to 1000 requests per run, with 10-50 being optimal for performance.
+
+**Q: What if an email isn't found?**
+A: If no email is found, the result will show `"email": null`. This is normal - not all email addresses are publicly discoverable.
+
+**Q: How do confidence scores work?**
+A: Scores range from 0-100, where 90+ indicates high confidence, 70-89 is moderate confidence, and below 70 suggests lower reliability. Higher scores mean the email is more likely to be correct.
+
+**Q: Can I verify the found emails?**
+A: Yes! Found emails include verification status. You can also use the Email Verifier actor for additional validation of the results.
+
+### Technical Questions
+
+**Q: What are the rate limits?**
+A: Tomba allows 150 requests per minute. The Actor automatically handles rate limiting by adding delays when needed. Large batches will take proportionally longer.
+
+**Q: How should I format names?**
+A: Use proper capitalization (e.g., "John", "Mary-Jane", "O'Connor"). The system handles various name formats, but accurate spelling is important.
+
+**Q: What domain formats are accepted?**
+A: Use clean domain names like "stripe.com" or "example.org". Don't include protocols (http/https) or subdomains unless specifically needed.
+
+**Q: Can I find emails for personal domains?**
+A: This tool is designed for business emails. Personal domains (gmail.com, yahoo.com) are not supported as they don't follow predictable patterns.
+
+### Data & Privacy
+
+**Q: Where does the email data come from?**
+A: Tomba aggregates data from public sources like company websites, social media profiles, professional networks, and other publicly available information.
+
+**Q: Is this GDPR compliant?**
+A: Yes, Tomba follows GDPR guidelines and only uses publicly available information. All data collection complies with privacy regulations.
+
+**Q: How fresh is the email data?**
+A: Data freshness varies, but verification dates are included in results. Tomba continuously updates its database with new information.
+
+**Q: Can I use found emails for cold outreach?**
+A: Yes, but ensure you comply with local email marketing laws (CAN-SPAM, GDPR, etc.). Always include unsubscribe options and respect privacy preferences.
+
+### Troubleshooting
+
+**Q: Why am I getting low confidence scores?**
+A: Low scores may indicate unusual company email patterns, new employees, or limited public information. Consider verifying these emails before use.
+
+**Q: What if I get API errors?**
+A: Check your API credentials, account quota, and request format. The Actor provides detailed error messages to help troubleshoot issues.
+
+**Q: How do I handle large batches efficiently?**
+A: Break large lists into smaller batches (50-100 requests). Monitor your API quota and consider upgrading your Tomba plan for higher volumes.
+
 ## Keywords
 
 email finder, email discovery, contact finder, lead generation, email search, prospect research, email hunting, contact discovery, sales prospecting, outreach automation, business contacts, email validation
