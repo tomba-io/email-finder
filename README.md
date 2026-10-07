@@ -1,277 +1,241 @@
-# Tomba Email Finder Actor
+# Tomba Email Finder
 
-[![Actor](https://img.shields.io/badge/Apify-Actor-blue)](https://apify.com/actors)
-[![Tomba API](https://img.shields.io/badge/Tomba-API-green)](https://tomba.io)
-[![Rate Limit](https://img.shields.io/badge/Rate%20Limit-150%2Fmin-orange)](https://tomba.io/api)
+[![Price](https://img.shields.io/badge/Price-%243.12%20per%201K%20requests-brightgreen)](#pricing)
+[![No signup](https://img.shields.io/badge/Tomba%20account-not%20needed-blue)](#quick-start)
+[![No rate limit](https://img.shields.io/badge/Rate%20limit-none-brightgreen)](#built-for-big-lists)
 
-A powerful Apify Actor that finds email addresses for specific people at companies using the **Tomba Email Finder API**. Perfect for lead generation, contact discovery, and building targeted email lists by combining company domains with first and last names.
+**Turn a name and a company into a verified business email, and a phone number if you want one.** Give us a list of people (a name plus a company domain or company name) and get their most likely professional email address, with a confidence score, a verification status, job title, LinkedIn profile and the public sources where it was found. Turn on **Find phone numbers** to get their direct phone numbers too.
 
-## Key Features
+No Tomba account. No API key. No subscription. **You pay $0.00312 per request, and only when Tomba returns an answer.**
 
-- **Email Discovery**: Find email addresses by combining domain + first name + last name
-- **Professional Contact Finding**: Discover business email addresses for specific individuals
-- **Bulk Processing**: Process multiple email finder requests efficiently with rate limiting
-- **Email Verification**: Get verification status and confidence scores for found emails
-- **Rate Limited**: Respects Tomba's 150 requests per minute limit
-- **Rich Data Output**: Comprehensive email information with metadata
-- **Source Tracking**: Multiple sources where email information was found
-- **Error Handling**: Graceful handling of invalid requests or unfound emails
+## Why teams choose this Actor
 
-## How it works
+- **Start in 30 seconds**: Open the Actor, add your people, click Start. Nothing to sign up for
+- **Verified emails**: Every email comes with a verification status and a 0–100 confidence score
+- **More than an email**: Job title, company, country, LinkedIn, Twitter and sources come with each result
+- **Phone numbers on demand**: Turn on `enrichMobile` to get mobile and direct numbers, and pay for them only when we find one
+- **Flexible input**: Use a company domain or just the company name, a full name or a first and last name
+- **$3.12 per 1,000 requests**: No monthly plan, no credits that expire, no minimum spend
+- **Pay only for answers**: Errors, empty results and incomplete requests are free
+- **Built for big lists**: No rate limit. Thousands of people are processed in parallel
+- **Never pay twice**: People you looked up in the last 24 hours come back from cache for free
+- **Export anywhere**: Download as CSV, Excel or JSON, or send results straight to your CRM with Apify integrations
 
-The Actor leverages Tomba's powerful Email Finder API to discover email addresses for specific people:
+## Promises we actually keep
 
-### Process Flow
+- **Less than 5% bounce rate** — Every email is verified in real time before you're charged.
+- **Highest coverage on the market** — 81% email coverage. That's 2x more valid emails than the next best competitor. We find contacts others simply can't.
 
-1. **Authentication**: Connects to Tomba API using your credentials
-2. **Input Processing**: Accepts array of requests with domain, first name, and last name
-3. **Email Discovery**: Uses Tomba's `emailFinder` method for each request
-4. **Data Validation**: Processes and validates found email information
-5. **Rate Limiting**: Automatically handles 150 requests/minute limit
-6. **Data Storage**: Saves results to Apify dataset
+## What you can do with it
 
-### What You Get
+| Goal                        | How Email Finder helps                                                     |
+| --------------------------- | -------------------------------------------------------------------------- |
+| **Book more meetings**      | Reach decision-makers directly instead of a generic `info@` inbox          |
+| **Enrich your CRM**         | Fill in missing emails for the contacts and leads you already have         |
+| **Account-based marketing** | Get the email of every stakeholder at your target accounts                 |
+| **Recruiting**              | Contact candidates at their current company                                |
+| **Partnerships and PR**     | Reach the right person at partners, investors and media outlets in one run |
 
-For each email finder request, you'll receive:
+## Quick start
 
-- **Input Details**: Domain, first name, last name used in the search
-- **Found Email**: The discovered email address (if found)
-- **Verification**: Email verification status and confidence score
-- **Source Tracking**: Multiple sources where the email was found
-- **Metadata**: When the email was extracted and last verified
-- **Error Handling**: Clear error messages when emails cannot be found
+1. Click **Try for free**
+2. Add the people you want to reach in **Email Finder Requests**: a company (`domain` or `company` name) and a name (`fullName`, or `firstName` and `lastName`) for each
+3. Click **Start**, then download your results as CSV, Excel or JSON
 
-## Quick Start
+That's it. No Tomba account or API key is needed.
 
-### Prerequisites
+## Input
 
-1. **Tomba Account**: Sign up at [Tomba.io](https://app.tomba.io/api) to get your API credentials
+| Field            | Required | Default | Description                                                                                                           |
+| ---------------- | -------- | ------- | --------------------------------------------------------------------------------------------------------------------- |
+| `requests`       | Yes      |         | People to find (see below)                                                                                            |
+| `maxResults`     | No       | `50`    | Maximum number of people to look up in this run (up to 1,000)                                                         |
+| `enrichMobile`   | No       | `false` | Also find the person's phone numbers. A result with phone data costs 6 credits instead of 1 (see [Pricing](#pricing)) |
+| `webhookUrl`     | No       |         | URL (`http://` or `https://`) that Tomba notifies when a result is ready                                              |
+| `maxConcurrency` | No       | `10`    | How many people to process at the same time (1–50)                                                                    |
+| `maxRetries`     | No       | `3`     | How many times to retry a temporary failure (0–10)                                                                    |
+| `useCache`       | No       | `true`  | Reuse results from your previous runs for free                                                                        |
+| `cacheTtlHours`  | No       | `24`    | How long cached results stay valid (`0` turns the cache off)                                                          |
 
-### Getting Your API Keys
+Each request needs a company and a name:
 
-1. Visit [Tomba API Dashboard](https://app.tomba.io/api)
-2. Copy your **API Key** (starts with `ta_`)
-3. Copy your **Secret Key** (starts with `ts_`)
+| Request field              | Description                                              |
+| -------------------------- | -------------------------------------------------------- |
+| `domain` or `company`      | The company domain (`stripe.com`) or its name (`Stripe`) |
+| `fullName`                 | The person's full name (`John Doe`)                      |
+| `firstName` and `lastName` | The person's first and last name, instead of `fullName`  |
 
-## Input Configuration
-
-### Required Parameters
-
-| Parameter        | Type     | Description                     |
-| ---------------- | -------- | ------------------------------- |
-| `tombaApiKey`    | `string` | Your Tomba API key (ta_xxxx)    |
-| `tombaApiSecret` | `string` | Your Tomba secret key (ts_xxxx) |
-| `requests`       | `array`  | Array of email finder requests  |
-
-### Optional Parameters
-
-| Parameter    | Type     | Default | Description                           |
-| ------------ | -------- | ------- | ------------------------------------- |
-| `maxResults` | `number` | `50`    | Maximum number of requests to process |
-
-### Request Object Structure
-
-Each request in the `requests` array should contain:
-
-| Field       | Type     | Description         | Example      |
-| ----------- | -------- | ------------------- | ------------ |
-| `domain`    | `string` | Company domain name | `stripe.com` |
-| `firstName` | `string` | Person's first name | `John`       |
-| `lastName`  | `string` | Person's last name  | `Doe`        |
-
-### Example Input
+Requests without a company or a name are never sent and never charged. Domains are cleaned up for you (`https://www.stripe.com/about` becomes `stripe.com`), names are trimmed, and duplicate people are removed.
 
 ```json
 {
-    "tombaApiKey": "ta_xxxxxxxxxxxxxxxxxxxx",
-    "tombaApiSecret": "ts_xxxxxxxxxxxxxxxxxxxx",
     "requests": [
-        {
-            "domain": "stripe.com",
-            "firstName": "John",
-            "lastName": "Doe"
-        },
-        {
-            "domain": "example.com",
-            "firstName": "Jane",
-            "lastName": "Smith"
-        },
-        {
-            "domain": "company.com",
-            "firstName": "Robert",
-            "lastName": "Johnson"
-        }
+        { "domain": "stripe.com", "firstName": "Patrick", "lastName": "Collison" },
+        { "company": "Shopify", "fullName": "Tobi Lutke" }
     ],
-    "maxResults": 100
+    "maxResults": 100,
+    "enrichMobile": true
 }
 ```
 
-### Best Practices
+## Output
 
-- **Name Accuracy**: Use correct spelling and formatting for first/last names
-- **Domain Format**: Use clean domain names without protocols (example.com, not https://example.com)
-- **Rate Limits**: The Actor automatically handles Tomba's 150 requests/minute limit
-- **Batch Size**: Process 10-50 requests at a time for optimal performance
-
-## Output Data Structure
-
-The Actor returns detailed information for each email finder request:
+You get one row per person:
 
 ```json
 {
-    "domain": "stripe.com",
-    "firstName": "John",
-    "lastName": "Doe",
     "email": "john.doe@stripe.com",
-    "score": 95,
+    "first_name": "John",
+    "last_name": "Doe",
+    "full_name": "John Doe",
+    "country": "US",
+    "gender": "male",
+    "phone_number": false,
+    "position": "Head of Sales",
+    "twitter": null,
+    "linkedin": "https://www.linkedin.com/in/johndoe",
+    "disposable": false,
+    "webmail": false,
+    "accept_all": false,
+    "company": "Stripe",
+    "website_url": "stripe.com",
+    "score": 97,
     "verification": {
         "date": "2025-10-17T00:00:00+02:00",
         "status": "valid"
     },
     "sources": [
         {
-            "uri": "https://stripe.com/team",
+            "uri": "https://stripe.com/blog/team",
             "website_url": "stripe.com",
             "extracted_on": "2024-09-17T11:26:56+02:00",
             "last_seen_on": "2025-09-06T04:51:06+02:00",
             "still_on_page": true
         }
     ],
-    "source": "tomba_email_finder"
+    "phone_data": [{ "number": "+14155550123", "type": "mobile" }],
+    "domain": "stripe.com",
+    "firstName": "John",
+    "lastName": "Doe",
+    "source": "tomba_email_finder",
+    "phoneNumbers": 1,
+    "charged": true,
+    "chargedCredits": 6,
+    "cached": false
 }
 ```
 
-### Data Fields Explained
+| Field                                      | Description                                                            |
+| ------------------------------------------ | ---------------------------------------------------------------------- |
+| `domain`, `firstName`, `lastName`          | The person you submitted (domain cleaned up)                           |
+| `fullName`, `inputCompany`                 | The full name and company name you submitted, when you used them       |
+| `email`                                    | The person's most likely business email (`null` if none was found)     |
+| `first_name`, `last_name`, `full_name`     | The person's name as found by Tomba                                    |
+| `position`                                 | Job title                                                              |
+| `company`, `website_url`                   | Company name and website                                               |
+| `country`, `gender`                        | Country and gender, when known                                         |
+| `linkedin`, `twitter`                      | Social profiles, when known                                            |
+| `phone_number`                             | Whether a phone number is available for this person                    |
+| `phone_data`                               | The person's phone numbers (only with `enrichMobile`)                  |
+| `phoneNumbers`                             | How many phone numbers were returned                                   |
+| `score`                                    | Confidence score from 0 to 100                                         |
+| `verification.status`, `verification.date` | Verification result (for example `valid`) and when it was checked      |
+| `accept_all`                               | `true` if the company's mail server accepts every address (catch-all)  |
+| `disposable`, `webmail`                    | Whether the email is from a disposable or webmail provider             |
+| `sources`                                  | Public pages where the email was found, with first and last seen dates |
+| `source`                                   | Always `tomba_email_finder`                                            |
+| `charged`                                  | `true` if this lookup was billed                                       |
+| `chargedCredits`                           | Credits billed for this row (0, 1 or 6)                                |
+| `cached`                                   | `true` if this result came from the cache (free)                       |
+| `error`                                    | Why no result was returned, if applicable                              |
 
-- **Input Echo**: `domain`, `firstName`, `lastName` - Your original request parameters
-- **Found Email**: `email` - The discovered email address (null if not found)
-- **Confidence Score**: `score` (0-100) indicates reliability of the found email
-- **Email Verification**: `verification.status` shows email validity
-- **Source Tracking**: `sources` array shows where email was found
-- **Time Stamps**: Track when data was extracted and last verified
+The dataset has three ready-made views: **Overview**, **Detailed View** and **Source Analysis**.
 
-## Use Cases
+## Pricing
 
-- **Lead Generation**: Find contact emails for specific people at target companies
-- **Sales Prospecting**: Build contact lists for outbound sales campaigns
-- **Recruitment**: Find email addresses for potential candidates at specific companies
-- **Partnership Outreach**: Contact specific decision-makers at partner companies
-- **Investor Relations**: Find contact information for investors or executives
-- **Media Outreach**: Contact specific journalists or PR contacts at media companies
+**$0.00312 per credit.** A lookup costs 1 credit ($3.12 per 1,000 people). No subscription and no Tomba account needed.
 
-## Error Handling
+| Result                                                        | Credits | Price    |
+| ------------------------------------------------------------- | ------- | -------- |
+| Email lookup                                                  | 1       | $0.00312 |
+| Email lookup with phone data (`enrichMobile` on, phone found) | 6       | $0.01872 |
+| `enrichMobile` on, but no phone number found                  | 1       | $0.00312 |
 
-The Actor gracefully handles various scenarios:
+Phone data adds $0.0156 (5 credits) to a result, and only when `enrichMobile` is on and at least one phone number is returned.
 
-- **Invalid Requests**: Records error message for missing required fields
-- **No Email Found**: Logs when no email address can be discovered
-- **Rate Limiting**: Automatically waits when API limits are reached
-- **API Errors**: Captures and reports API-related issues
+You are only charged when Tomba returns an answer for the person:
 
-## Resources & Documentation
+| What happens                                                      | Charged |
+| ----------------------------------------------------------------- | ------- |
+| Email found for the person                                        | Yes     |
+| Person looked up, but Tomba has no email for them (`email: null`) | Yes     |
+| No result at all for the request                                  | No      |
+| Invalid domain or any other error                                 | No      |
+| Request missing a company or a name (never sent)                  | No      |
+| Temporary failure (it is retried automatically)                   | No      |
+| Result served from the cache                                      | No      |
 
-### API Documentation
+Every row shows `charged`, `chargedCredits` and `cached`, so you always know what you paid for. To cap your spend, set **Maximum cost per run** in the run options: the Actor stops cleanly when the limit is reached.
 
-- [Tomba API Docs](https://tomba.io/api) - Complete API reference
-- [Authentication Guide](https://app.tomba.io/api) - Get your API keys
-- [Pricing & Limits](https://tomba.io/pricing) - Understand rate limits and costs
-- [Email Finder API](https://docs.tomba.io/api/finder#email-finder) - Specific endpoint documentation
+## Built for big lists
 
-### Rate Limiting
+- **No rate limit**: up to 50 people are processed at the same time
+- **Automatic retries**: temporary failures are retried for you, and never billed
+- **Resumable**: if a run is interrupted, it continues where it stopped without charging you again
+- **Cache**: repeat lookups within 24 hours are free
 
-- Tomba limits to **150 requests per minute**
-- Actor automatically handles rate limiting with delays
-- Large batches may take time to complete
+## Integrations
 
-### Cost Considerations
-
-- Each email finder request = 1 Tomba API request
-- Monitor your Tomba usage dashboard
-- Consider Tomba's pricing tiers for volume usage
+Run it on a schedule, call it from the Apify API, or connect it to Zapier, Make, Google Sheets, HubSpot, Slack and hundreds of other apps with [Apify integrations](https://docs.apify.com/platform/integrations). Webhooks let you trigger your own workflow as soon as a run finishes.
 
 ## FAQ
 
-### General Questions
+**Do I need a Tomba account or API key?**
+No. Everything is built in. You only pay the per-request price on Apify.
 
-**Q: How does email finding work?**
-A: Email finding uses a person's name and company domain to predict and verify their email address. It combines pattern recognition, database matching, and verification to find valid email addresses.
+**How much does it cost?**
+$0.00312 per request that gets an answer ($3.12 per 1,000), or $0.01872 when you turn on `enrichMobile` and we return phone numbers. Errors, empty results, incomplete requests and cached lookups are free.
 
-**Q: What information do I need to find an email?**
-A: You need the person's first name, last name, and company domain. The more accurate these details, the better the results.
+**What do I need to find an email?**
+The person's name (`fullName`, or `firstName` and `lastName`) and their company (`domain` or `company` name). The domain gives the most precise results; correct spelling helps too.
 
-**Q: How accurate are the found emails?**
-A: Accuracy varies by company and person, but Tomba typically achieves 85-95% accuracy. The confidence score (0-100) indicates the reliability of each found email.
+**Can I get phone numbers too?**
+Yes. Turn on **Find phone numbers** (`enrichMobile`). Numbers come back in `phone_data`, and `phoneNumbers` tells you how many. A result with phone data costs 6 credits ($0.01872) instead of 1; if no phone number is found you pay the normal 1 credit. Phone lookups are off by default.
 
-### Usage & Features
+**How many people can I look up in one run?**
+Up to 1,000 per run, processed in parallel. There is no rate limit.
 
-**Q: Can I process multiple email searches at once?**
-A: Yes, provide an array of requests in the `requests` parameter. You can process up to 1000 requests per run, with 10-50 being optimal for performance.
+**What domain format should I use?**
+Anything works: `stripe.com`, `www.stripe.com` or `https://stripe.com/about`. We clean it up and remove duplicate people.
 
-**Q: What if an email isn't found?**
-A: If no email is found, the result will show `"email": null`. This is normal - not all email addresses are publicly discoverable.
+**Why was I charged when `email` is empty?**
+Tomba found the person's record but no email for them. That is still an answer, so it is billed like any other lookup.
 
-**Q: How do confidence scores work?**
-A: Scores range from 0-100, where 90+ indicates high confidence, 70-89 is moderate confidence, and below 70 suggests lower reliability. Higher scores mean the email is more likely to be correct.
+**How do I know an email is safe to send to?**
+Check `verification.status` and `score`. A `valid` status and a high score mean the address is ready for outreach.
 
-**Q: Can I verify the found emails?**
-A: Yes! Found emails include verification status. You can also use the Email Verifier actor for additional validation of the results.
+**Can I find emails at gmail.com or other personal domains?**
+No. Email Finder is built for business domains.
 
-### Technical Questions
+**What if my run is interrupted?**
+It picks up where it stopped. People already processed are not charged again.
 
-**Q: What are the rate limits?**
-A: Tomba allows 150 requests per minute. The Actor automatically handles rate limiting by adding delays when needed. Large batches will take proportionally longer.
+**How do I limit what I spend?**
+Set **Maximum cost per run** before you start. The Actor stops as soon as the limit is reached.
 
-**Q: How should I format names?**
-A: Use proper capitalization (e.g., "John", "Mary-Jane", "O'Connor"). The system handles various name formats, but accurate spelling is important.
-
-**Q: What domain formats are accepted?**
-A: Use clean domain names like "stripe.com" or "example.org". Don't include protocols (http/https) or subdomains unless specifically needed.
-
-**Q: Can I find emails for personal domains?**
-A: This tool is designed for business emails. Personal domains (gmail.com, yahoo.com) are not supported as they don't follow predictable patterns.
-
-### Data & Privacy
-
-**Q: Where does the email data come from?**
-A: Tomba aggregates data from public sources like company websites, social media profiles, professional networks, and other publicly available information.
-
-**Q: Is this GDPR compliant?**
-A: Yes, Tomba follows GDPR guidelines and only uses publicly available information. All data collection complies with privacy regulations.
-
-**Q: How fresh is the email data?**
-A: Data freshness varies, but verification dates are included in results. Tomba continuously updates its database with new information.
-
-**Q: Can I use found emails for cold outreach?**
-A: Yes, but ensure you comply with local email marketing laws (CAN-SPAM, GDPR, etc.). Always include unsubscribe options and respect privacy preferences.
-
-### Troubleshooting
-
-**Q: Why am I getting low confidence scores?**
-A: Low scores may indicate unusual company email patterns, new employees, or limited public information. Consider verifying these emails before use.
-
-**Q: What if I get API errors?**
-A: Check your API credentials, account quota, and request format. The Actor provides detailed error messages to help troubleshoot issues.
-
-**Q: How do I handle large batches efficiently?**
-A: Break large lists into smaller batches (50-100 requests). Monitor your API quota and consider upgrading your Tomba plan for higher volumes.
-
-## Keywords
-
-email finder, email discovery, contact finder, lead generation, email search, prospect research, email hunting, contact discovery, sales prospecting, outreach automation, business contacts, email validation
+**Is it GDPR compliant?**
+Tomba only uses publicly available business information. Make sure your outreach follows the email marketing laws that apply to you (GDPR, CAN-SPAM and so on).
 
 ## Support
 
-If you need any help, have questions, or encounter any issues while using Tomba.io, please don't hesitate to reach out to our support team. You can contact us via:
+Questions or feedback? We're happy to help:
 
 - **Email**: support@tomba.io
-- **Live chat**: Available on the Tomba.io website during business hours
-
-## Contributing
-
-We welcome contributions to improve this actor. Please feel free to submit issues, feature requests, or pull requests to help make this tool even better for the community.
+- **Live chat**: on [tomba.io](https://tomba.io) during business hours
+- **Issues**: use the **Issues** tab on this Actor's page
 
 ## About Tomba
 
-Founded in 2020, Tomba prides itself on being the most reliable, accurate, and in-depth source of email address data available anywhere. We process terabytes of data to produce our Email finder API.
+Founded in 2020, [Tomba](https://tomba.io) is a B2B data platform for finding, verifying and enriching business contacts. Our Email Finder, Domain Search and Email Verifier help sales and marketing teams reach the right people.
 
 ![Tomba Logo](https://tomba.io/logo.png)

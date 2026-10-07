@@ -1,9 +1,9 @@
 {
     "actorSpecification": 1,
     "name": "email-finder",
-    "title": "Empty TypeScript project",
-    "description": "Empty project in TypeScript.",
-    "version": "0.0",
+    "title": "Tomba Email Finder",
+    "description": "Find the most likely email address (and optionally phone numbers) of a person from a company domain or name and their full name or first and last name using the Tomba API.",
+    "version": "1.0",
     "buildTag": "latest",
     "meta": {
         "templateId": "ts-empty"
@@ -13,5 +13,9 @@
     "output": "./output_schema.json",
     "storages": {
         "dataset": "./dataset_schema.json"
+    },
+    "environmentVariables": {
+        "TOMBA_API_KEY": "@tombaApiKey",
+        "TOMBA_API_SECRET": "@tombaApiSecret"
     }
 }

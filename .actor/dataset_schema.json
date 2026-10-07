@@ -5,7 +5,7 @@
         "type": "object",
         "properties": {
             "email": {
-                "type": "string",
+                "type": ["string", "null"],
                 "description": "Author's email address"
             },
             "first_name": {
@@ -175,9 +175,70 @@
                         }
                     }
                 }
+            },
+            "phone_data": {
+                "type": ["array", "null"],
+                "description": "Phone numbers found for the person (only when `enrichMobile` is on)",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "number": {
+                            "type": ["string", "null"],
+                            "description": "Phone number"
+                        },
+                        "type": {
+                            "type": ["string", "null"],
+                            "description": "Phone type (for example mobile)"
+                        }
+                    }
+                }
+            },
+            "phoneNumbers": {
+                "type": "integer",
+                "description": "Number of phone numbers returned in `phone_data`"
+            },
+            "charged": {
+                "type": "boolean",
+                "description": "Whether this request was charged (pay-per-event)"
+            },
+            "chargedCredits": {
+                "type": "integer",
+                "description": "Number of Tomba credits charged for this item (0 when free or cached)"
+            },
+            "cached": {
+                "type": "boolean",
+                "description": "Whether the result came from the cache (free)"
+            },
+            "domain": {
+                "type": ["string", "null"],
+                "description": "Input company domain (normalized)"
+            },
+            "firstName": {
+                "type": ["string", "null"],
+                "description": "Input first name"
+            },
+            "lastName": {
+                "type": ["string", "null"],
+                "description": "Input last name"
+            },
+            "fullName": {
+                "type": ["string", "null"],
+                "description": "Input full name (when provided)"
+            },
+            "inputCompany": {
+                "type": ["string", "null"],
+                "description": "Input company name (when provided)"
+            },
+            "source": {
+                "type": "string",
+                "description": "Data source identifier (tomba_email_finder)"
+            },
+            "error": {
+                "type": ["string", "null"],
+                "description": "Error message if the search failed"
             }
         },
-        "required": ["email"]
+        "required": ["domain", "source"]
     },
     "views": {
         "overview": {
@@ -216,6 +277,11 @@
             "title": "Detailed View",
             "transformation": {
                 "fields": [
+                    "domain",
+                    "firstName",
+                    "lastName",
+                    "fullName",
+                    "inputCompany",
                     "email",
                     "first_name",
                     "last_name",
@@ -230,8 +296,15 @@
                     "score",
                     "accept_all",
                     "phone_number",
+                    "phone_data",
+                    "phoneNumbers",
                     "verification",
-                    "sources"
+                    "sources",
+                    "source",
+                    "error",
+                    "charged",
+                    "chargedCredits",
+                    "cached"
                 ]
             },
             "display": {
