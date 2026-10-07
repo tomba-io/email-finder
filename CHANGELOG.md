@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
+- Dataset schema accepts `null` for every Tomba field and a boolean or string `phone_number`, so Apify's item validation can't fail a run
 - Use the `emailFinder({ domain, firstName, lastName })` signature of the SDK
 - Actor title and description no longer use the template boilerplate
 

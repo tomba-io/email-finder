@@ -57,7 +57,7 @@
                 "description": "Whether the domain accepts all emails"
             },
             "phone_number": {
-                "type": ["boolean", "null"],
+                "type": ["boolean", "string", "null"],
                 "description": "Whether a phone number is available for this author"
             },
             "info": {
