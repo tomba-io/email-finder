@@ -1,0 +1,554 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Tomba Email Finder API",
+        "version": "1.0.0",
+        "description": "Real-time API (Apify Standby mode). Find a person's email address (and optionally phone numbers) from a company domain or name and their name. $0.00312 per credit: a lookup with an answer costs 1 credit ($0.00312), or 6 credits ($0.01872) when `enrichMobile` is on and phone numbers are returned. Negative answers (person found, no email) are charged; empty results, errors, incomplete requests and cached results are free."
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "summary": "Find the email of one person",
+                "description": "Without query parameters, returns a short usage note (also used as the readiness probe).",
+                "parameters": [
+                    {
+                        "name": "domain",
+                        "in": "query",
+                        "description": "Company domain. Required unless `company` is set. URLs are cleaned up.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "stripe.com"
+                    },
+                    {
+                        "name": "company",
+                        "in": "query",
+                        "description": "Company name. Alternative to `domain`.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Stripe"
+                    },
+                    {
+                        "name": "firstName",
+                        "in": "query",
+                        "description": "Person's first name. Required with `lastName` unless `fullName` is set.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "John"
+                    },
+                    {
+                        "name": "first_name",
+                        "in": "query",
+                        "description": "Alias of `firstName`.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "lastName",
+                        "in": "query",
+                        "description": "Person's last name. Required with `firstName` unless `fullName` is set.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "Doe"
+                    },
+                    {
+                        "name": "last_name",
+                        "in": "query",
+                        "description": "Alias of `lastName`.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fullName",
+                        "in": "query",
+                        "description": "Person's full name. Alternative to `firstName` + `lastName`.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "John Doe"
+                    },
+                    {
+                        "name": "full_name",
+                        "in": "query",
+                        "description": "Alias of `fullName`.",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "enrichMobile",
+                        "in": "query",
+                        "description": "Also return the person's phone numbers in `phone_data` (6 credits instead of 1 when phone data is returned).",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "example": false
+                    },
+                    {
+                        "name": "webhookUrl",
+                        "in": "query",
+                        "description": "Optional URL that Tomba notifies when a result is ready (sent to Tomba as `webhook_url`).",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^https?://"
+                        }
+                    },
+                    {
+                        "name": "maxResults",
+                        "in": "query",
+                        "description": "Maximum number of requests to process (default 50).",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 50
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/Results"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Error"
+                    },
+                    "402": {
+                        "$ref": "#/components/responses/Error"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Find emails using a JSON input",
+                "description": "Accepts the same JSON input as a normal Actor run.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "requests": {
+                                        "type": "array",
+                                        "description": "List of people to find. Each request needs a company (`domain` or `company` name) and a name (`fullName`, or `firstName` and `lastName`).",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "domain": {
+                                                    "type": "string",
+                                                    "description": "Company domain name (e.g., 'stripe.com'). Required unless `company` is set"
+                                                },
+                                                "company": {
+                                                    "type": "string",
+                                                    "description": "Company name (e.g., 'Stripe'). Alternative to `domain`"
+                                                },
+                                                "firstName": {
+                                                    "type": "string",
+                                                    "description": "Person's first name. Required with `lastName` unless `fullName` is set"
+                                                },
+                                                "lastName": {
+                                                    "type": "string",
+                                                    "description": "Person's last name. Required with `firstName` unless `fullName` is set"
+                                                },
+                                                "fullName": {
+                                                    "type": "string",
+                                                    "description": "Person's full name (e.g., 'John Doe'). Alternative to `firstName` + `lastName`"
+                                                }
+                                            },
+                                            "additionalProperties": false
+                                        },
+                                        "minItems": 1,
+                                        "maxItems": 1000,
+                                        "example": [
+                                            {
+                                                "domain": "stripe.com",
+                                                "firstName": "John",
+                                                "lastName": "Doe"
+                                            },
+                                            {
+                                                "company": "Shopify",
+                                                "fullName": "Jane Smith"
+                                            }
+                                        ]
+                                    },
+                                    "maxResults": {
+                                        "type": "integer",
+                                        "description": "Maximum number of requests to process (default: 50, max: 1000)",
+                                        "default": 50,
+                                        "minimum": 1,
+                                        "maximum": 1000,
+                                        "example": 50
+                                    },
+                                    "enrichMobile": {
+                                        "type": "boolean",
+                                        "description": "Also return the person's phone numbers in `phone_data`. A result with phone data costs 6 credits instead of 1; results without phone data still cost 1 credit.",
+                                        "default": false
+                                    },
+                                    "webhookUrl": {
+                                        "type": "string",
+                                        "description": "Optional URL that Tomba notifies when a result is ready (sent to Tomba as `webhook_url`).",
+                                        "pattern": "^https?://",
+                                        "example": "https://example.com/tomba-webhook"
+                                    }
+                                },
+                                "required": ["requests"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "$ref": "#/components/responses/Results"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/Error"
+                    },
+                    "402": {
+                        "$ref": "#/components/responses/Error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "responses": {
+            "Results": {
+                "description": "Email finder results, in the same format as the dataset items.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "items": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EmailFinderResult"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Error": {
+                "description": "Invalid input (400) or the run's max charge limit was reached (402).",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "EmailFinderResult": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's email address"
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's first name"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's last name"
+                    },
+                    "full_name": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's full name"
+                    },
+                    "website_url": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Website URL associated with the author"
+                    },
+                    "company": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's company or organization"
+                    },
+                    "position": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's job title or position"
+                    },
+                    "country": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's country"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's gender"
+                    },
+                    "twitter": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's Twitter profile URL"
+                    },
+                    "linkedin": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Author's LinkedIn profile URL"
+                    },
+                    "score": {
+                        "type": "number",
+                        "nullable": true,
+                        "description": "Confidence score for the author information (0-100)"
+                    },
+                    "accept_all": {
+                        "type": "boolean",
+                        "nullable": true,
+                        "description": "Whether the domain accepts all emails"
+                    },
+                    "phone_number": {
+                        "type": "boolean",
+                        "nullable": true,
+                        "description": "Whether a phone number is available for this author"
+                    },
+                    "info": {
+                        "type": "object",
+                        "nullable": true,
+                        "description": "Additional detailed information about the author and source",
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Page title where the author was found"
+                            },
+                            "description": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Page description or meta description"
+                            },
+                            "first_name": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "First name from page metadata"
+                            },
+                            "last_name": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Last name from page metadata"
+                            },
+                            "full_name": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Full name from page metadata"
+                            },
+                            "article_domain": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Domain of the article or page"
+                            },
+                            "same_as_domain": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Whether the domain matches expected domain"
+                            },
+                            "linkedin": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "LinkedIn handle from page metadata"
+                            },
+                            "twitter": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Twitter handle from page metadata"
+                            },
+                            "phone": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Phone number from page metadata"
+                            },
+                            "email": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Email from page metadata"
+                            },
+                            "gender": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Gender from page metadata"
+                            },
+                            "position": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Position from page metadata"
+                            },
+                            "image": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Author image URL from page metadata"
+                            },
+                            "gravatar": {
+                                "type": "boolean",
+                                "nullable": true,
+                                "description": "Whether author has a Gravatar"
+                            },
+                            "emails": {
+                                "type": "array",
+                                "nullable": true,
+                                "description": "Array of additional emails found",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "verification": {
+                        "type": "object",
+                        "nullable": true,
+                        "description": "Email verification information from Tomba",
+                        "properties": {
+                            "date": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Date when the email was verified (ISO format)"
+                            },
+                            "status": {
+                                "type": "string",
+                                "nullable": true,
+                                "description": "Verification status (valid, invalid, unknown)"
+                            }
+                        }
+                    },
+                    "sources": {
+                        "type": "array",
+                        "nullable": true,
+                        "description": "Sources where the author information was found",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "uri": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "description": "URI where the email was found"
+                                },
+                                "website_url": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "description": "Website URL where the email was found"
+                                },
+                                "extracted_on": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "description": "Date when the email was extracted (ISO format)"
+                                },
+                                "last_seen_on": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "description": "Date when the email was last seen (ISO format)"
+                                },
+                                "still_on_page": {
+                                    "type": "boolean",
+                                    "nullable": true,
+                                    "description": "Whether the email is still on the page"
+                                }
+                            }
+                        }
+                    },
+                    "phone_data": {
+                        "type": "array",
+                        "nullable": true,
+                        "description": "Phone numbers found for the person (only when `enrichMobile` is on)",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "number": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "description": "Phone number"
+                                },
+                                "type": {
+                                    "type": "string",
+                                    "nullable": true,
+                                    "description": "Phone type (for example mobile)"
+                                }
+                            }
+                        }
+                    },
+                    "phoneNumbers": {
+                        "type": "integer",
+                        "description": "Number of phone numbers returned in `phone_data`"
+                    },
+                    "charged": {
+                        "type": "boolean",
+                        "description": "Whether this request was charged (pay-per-event)"
+                    },
+                    "chargedCredits": {
+                        "type": "integer",
+                        "description": "Number of Tomba credits charged for this item (0 when free or cached)"
+                    },
+                    "cached": {
+                        "type": "boolean",
+                        "description": "Whether the result came from the cache (free)"
+                    },
+                    "domain": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Input company domain (normalized)"
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Input first name"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Input last name"
+                    },
+                    "fullName": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Input full name (when provided)"
+                    },
+                    "inputCompany": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Input company name (when provided)"
+                    },
+                    "source": {
+                        "type": "string",
+                        "description": "Data source identifier (tomba_email_finder)"
+                    },
+                    "error": {
+                        "type": "string",
+                        "nullable": true,
+                        "description": "Error message if the search failed"
+                    }
+                }
+            }
+        }
+    }
+}

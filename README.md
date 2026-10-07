@@ -184,6 +184,28 @@ Every row shows `charged`, `chargedCredits` and `cached`, so you always know wha
 - **Resumable**: if a run is interrupted, it continues where it stopped without charging you again
 - **Cache**: repeat lookups within 24 hours are free
 
+## Real-time API
+
+Need results instantly inside your own app? This Actor also runs as a **real-time API** (Apify Standby mode): no run to start, no dataset to fetch, just an HTTP request that returns JSON in seconds. Pricing is the same.
+
+Look up one person with a `GET` request (`domain` or `company`, plus `fullName` or `firstName` and `lastName`):
+
+```bash
+curl "https://<your-standby-url>/?domain=stripe.com&firstName=John&lastName=Doe&enrichMobile=true" \
+  -H "Authorization: Bearer <YOUR_APIFY_TOKEN>"
+```
+
+To look up several people at once, `POST` the same JSON input as a normal run:
+
+```bash
+curl -X POST "https://<your-standby-url>/" \
+  -H "Authorization: Bearer <YOUR_APIFY_TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"requests": [{"domain": "stripe.com", "firstName": "John", "lastName": "Doe"}, {"company": "Shopify", "fullName": "Jane Smith"}]}'
+```
+
+The response is `{ "items": [...] }`, with the same rows as the dataset. Find your Standby URL and the full OpenAPI description in the **API** tab of this Actor.
+
 ## Integrations
 
 Run it on a schedule, call it from the Apify API, or connect it to Zapier, Make, Google Sheets, HubSpot, Slack and hundreds of other apps with [Apify integrations](https://docs.apify.com/platform/integrations). Webhooks let you trigger your own workflow as soon as a run finishes.
